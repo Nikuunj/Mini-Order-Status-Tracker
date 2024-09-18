@@ -1,19 +1,49 @@
-import express, { NextFunction, Request , Response } from 'express';
+import express, { Request, Response } from 'express';
+import { PrismaClient } from '@prisma/client';
 import cors from 'cors';
-import { orderRouter } from './routes/orderRoutes';
 
 const app = express();
-app.use(express.json());
-app.use(cors());
+const prisma = new PrismaClient();
 
-// Error handling middleware
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-    console.error(err.stack);
-    res.status(500).json({ error: 'Something broke!' });
+app.use(cors());
+app.use(express.json());
+
+// Endpoint to get orders with optional filtering and pagination
+app.get('/orders', async (req: Request, res: Response) => {
+  const { status, page = 1, pageSize = 10 } = req.query;
+  const orders = await prisma.order.findMany({
+    where: status ? { status: String(status) } : undefined,
+    skip: (Number(page) - 1) * Number(pageSize),
+    take: Number(pageSize),
+  });
+  res.json(orders);
 });
 
-app.use('/api', orderRouter)
+// Endpoint to add a new order
+app.post('/orderAdd', async (req: Request, res: Response) => {
+  const { customerName, status } = req.body;
+  console.log('1');
+  
+  
+  if (!customerName || !status) {
+    return res.status(400).json({ error: 'Missing required fields' });
+  }
+  console.log('2');
+  
+  try {
+    const newOrder = await prisma.order.create({
+      data: {
+        customerName,
+        status,
+      },
+    });
+    res.status(201).json(newOrder);
+  } catch (error) {
+    res.status(500).json({ error: 'Error creating order' });
+  }
+});
 
-app.listen(4000, () => {
-    console.log('Server running on http://localhost:4000');
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });

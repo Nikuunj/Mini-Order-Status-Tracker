@@ -10,10 +10,13 @@
   },
   "dependencies": {
     "@types/axios": "^0.9.36",
+    "@types/react-table": "^7.7.20",
     "axios": "^1.7.7",
     "next": "14.2.11",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-table": "^7.8.0",
+    "socket.io-client": "^4.7.5"
   },
   "devDependencies": {
     "@types/node": "^20",

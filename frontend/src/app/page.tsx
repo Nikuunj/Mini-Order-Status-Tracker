@@ -1,22 +1,19 @@
-'use client'
+import Head from 'next/head';
+import OrdersTable from './components/OrdersTable';
+import AddOrderForm from './components/AddOrderForm'; // Make sure the path is correct
 
-import React from "react";
-import Link from 'next/link'; // Import Link from next/link
-
-export default function Home() {
+const Home = () => {
   return (
-    <div>
-      <h1>Welcome to Home Page</h1>
-      <nav>
-        <ul>
-          <li>
-            <Link href="/MakeOrder">Go to Make Order</Link>
-          </li>
-          <li>
-            <Link href="/OrderReceiver">Go to Order Receiver</Link>
-          </li>
-        </ul>
-      </nav>
+    <div className="container mx-auto p-4">
+      <Head>
+        <title>Orders List</title>
+      </Head>
+      <h1 className="text-2xl font-bold mb-4">Orders List</h1>
+      
+      {/* OrdersTable component */}
+      <OrdersTable />
     </div>
   );
-}
+};
+
+export default Home;
