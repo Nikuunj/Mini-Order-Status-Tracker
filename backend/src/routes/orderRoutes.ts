@@ -1,18 +1,24 @@
 import express, { Request, Response } from 'express';
 import { OrderManager, Order } from '../manager/OrderManager';
 
+
 export const orderRouter = express.Router();
 const orderMnager = new OrderManager();
 
 orderRouter.post('/addOrder', (req: Request, res: Response ) => {
-    const name:string = req.body.name;
+    const { name } = req.body;
+    console.log('add');
+    
     const ret: Order = orderMnager.addOrder(name);
+    console.log("order added")
 
     res.status(200).json(ret);
 })
 
 orderRouter.get('/get-all', (req: Request, res: Response) => {
     const getAll: Order[] = orderMnager.getAllOrders();
+    console.log('send all order');
+    console.log(getAll);
     res.status(200).json(getAll);
 })
 

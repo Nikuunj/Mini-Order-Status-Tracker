@@ -1,4 +1,3 @@
-import { idText } from "typescript";
 import {v4 as uuidv4} from 'uuid';
 
 
@@ -16,13 +15,17 @@ export class OrderManager {
 
     addOrder(name: string): Order{
         const id: string = uuidv4();
-        if(name) {
-            this.orders.push({
-                id,
-                name,
-                status : "Preparing"
-            })
-        }
+        const newOrder: Order = {
+            id,
+            name,
+            status: "Preparing",
+        };
+
+        this.orders.push(newOrder);
+        console.log('add order');
+        
+        console.log(this.orders);
+        
         return { id, name, status: "Preparing" }
     }
 
@@ -63,15 +66,17 @@ export class OrderManager {
     }
 
     deteleOrdeAfterRecived(id: string): boolean {
-        const len: number = this.orders.length;
-        this.orders = this.orders.filter(order => order.id !== id);
-        if(len > this.orders.length) {
-            return true;
+        const order = this.orders.find(order => order.id === id);
+        if (!order || order.status !== 'Received') {
+            return false;  // You can only delete orders that are received
         }
-        return false;
+        const originalLength = this.orders.length;
+        this.orders = this.orders.filter(order => order.id !== id);
+        return originalLength > this.orders.length;
     }
 
     getAllOrders(): Order[] {
+        console.log("Current orders:", this.orders);
         return this.orders;
     }
 }
